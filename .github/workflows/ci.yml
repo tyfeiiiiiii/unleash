@@ -1,4 +1,4 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
@@ -13,30 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18.20.4'  # Replace with your Node.js version
+        node-version: '18.20.4' # Adjust the Node.js version as needed
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: yarn install
 
-    - name: Run tests
+    - name: Run Tests
       run: yarn test
 
-    - name: Build Docker image
-      run: docker-compose -f docker-compose.yml build
+    - name: Build Project
+      run: yarn build
 
-    - name: Run Docker containers
-      run: docker-compose -f docker-compose.yml up -d
-
-    - name: Run additional checks (if needed)
-      run: echo "Add any additional checks here"
-
-    # Optional step to cleanup Docker containers if needed
-    - name: Cleanup Docker containers
-      if: always()
-      run: docker-compose -f docker-compose.yml down
+    - name: Cache Yarn Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/yarn
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
