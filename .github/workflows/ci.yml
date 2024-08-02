@@ -37,3 +37,12 @@ jobs:
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-
+
+    - name: Commit Changes
+      uses: EndBug/add-and-commit@v9
+      with:
+        author_name: github-actions
+        author_email: github-actions@github.com
+        message: 'Automated commit from GitHub Actions'
+        add: '.'
+        token: ${{ secrets.GITHUB_TOKEN }}
